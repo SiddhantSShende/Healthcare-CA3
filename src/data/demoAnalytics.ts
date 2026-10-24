@@ -5,6 +5,7 @@ import type {
   FeatureImportance,
   ModelMetrics,
   PredictedActualPoint,
+  ProviderType,
   ResidualPoint,
 } from "@/types/health";
 
@@ -44,7 +45,7 @@ function gaussian(): number {
 
 const cityIndexes = new Map(demoCities.map((c) => [c.name, c.costIndex]));
 
-const providerTypeIndex: Record<string, number> = {
+const providerTypeIndex: Record<ProviderType, number> = {
   hospital: 1.18,
   "specialty-center": 1.06,
   polyclinic: 0.94,
