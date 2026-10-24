@@ -150,11 +150,7 @@ function SidebarNav({
 
 function BrandMark({ collapsed }: { collapsed: boolean }) {
   return (
-    <Link
-      to="/"
-      className="flex items-center px-4 py-5"
-      aria-label="HealthCompare home"
-    >
+    <Link to="/" className="flex items-center px-4 py-5" aria-label="HealthCompare home">
       <Logo showWordmark={!collapsed} />
     </Link>
   );
@@ -199,7 +195,9 @@ export function AppShell({
             collapsed ? "w-[76px]" : "w-[264px]",
           )}
         >
-          <div className={cn("flex items-center justify-between", collapsed && "justify-center px-0")}>
+          <div
+            className={cn("flex items-center justify-between", collapsed && "justify-center px-0")}
+          >
             <BrandMark collapsed={collapsed} />
             {!collapsed && (
               <Button
@@ -236,36 +234,32 @@ export function AppShell({
           )}
         </aside>
 
-        {/* Mobile drawer */}
-        <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-          <SheetTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="lg:hidden"
-              aria-label="Open navigation menu"
-            >
-              <Menu className="h-5 w-5" aria-hidden />
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="left" className="w-[280px] p-0">
-            <SheetTitle className="sr-only">Navigation</SheetTitle>
-            <BrandMark collapsed={false} />
-            <SidebarNav
-              collapsed={false}
-              compareCount={compareProviderIds.length}
-              onNavigate={() => setMobileOpen(false)}
-            />
-          </SheetContent>
-        </Sheet>
-
         {/* Main column */}
         <div className="flex min-w-0 flex-1 flex-col">
           <header className="sticky top-0 z-30 border-b border-border bg-background/90 backdrop-blur-sm">
             <div className="flex h-14 items-center gap-3 px-4 sm:px-6">
-              <span className="lg:hidden">
-                <MobileTriggerSlot />
-              </span>
+              {/* Mobile navigation drawer */}
+              <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+                <SheetTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="-ml-2 lg:hidden"
+                    aria-label="Open navigation menu"
+                  >
+                    <Menu className="h-5 w-5" aria-hidden />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="left" className="w-[280px] p-0">
+                  <SheetTitle className="sr-only">Navigation</SheetTitle>
+                  <BrandMark collapsed={false} />
+                  <SidebarNav
+                    collapsed={false}
+                    compareCount={compareProviderIds.length}
+                    onNavigate={() => setMobileOpen(false)}
+                  />
+                </SheetContent>
+              </Sheet>
               <Breadcrumb>
                 <BreadcrumbList>
                   <BreadcrumbItem>
@@ -292,30 +286,5 @@ export function AppShell({
         </div>
       </div>
     </TooltipProvider>
-  );
-}
-
-/** The sheet trigger lives inside the header; this wires it via the Sheet context. */
-function MobileTriggerSlot() {
-  // The SheetTrigger is rendered inside the Sheet above; to keep a single
-  // source of truth we re-render a labelled trigger button that opens the
-  // same sheet through a click proxy.
-  return <MobileTriggerBridge />;
-}
-
-import { useSheetContextSafe } from "@/components/layout/mobile-nav-bridge";
-
-function MobileTriggerBridge() {
-  const open = useSheetContextSafe();
-  return (
-    <Button
-      variant="ghost"
-      size="icon"
-      className="-ml-2"
-      aria-label="Open navigation menu"
-      onClick={() => open()}
-    >
-      <Menu className="h-5 w-5" aria-hidden />
-    </Button>
   );
 }
